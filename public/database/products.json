@@ -1,0 +1,29 @@
+[
+  {
+    "date": 1646953122480,
+    "name": "nuevo prod",
+    "description": "es un nuevo prod en db ",
+    "code": "K858SDD",
+    "thumbnail": "static/img/thumbnail-1646953122478mensaje-codigo-portabilidadPersoal.jpeg",
+    "price": 142,
+    "stock": 255
+  },
+  {
+    "date": 1646953123329,
+    "name": "nuevo prod",
+    "description": "es un nuevo prod en db ",
+    "code": "K858SDD",
+    "thumbnail": "static/img/thumbnail-1646953123326mensaje-codigo-portabilidadPersoal.jpeg",
+    "price": 142,
+    "stock": 255
+  },
+  {
+    "date": 1646953123982,
+    "name": "nuevo prod",
+    "description": "es un nuevo prod en db ",
+    "code": "K858SDD",
+    "thumbnail": "static/img/thumbnail-1646953123979mensaje-codigo-portabilidadPersoal.jpeg",
+    "price": 142,
+    "stock": 255
+  }
+]

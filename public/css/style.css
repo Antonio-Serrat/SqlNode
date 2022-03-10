@@ -1,0 +1,154 @@
+body{
+    background-color: rgb(248, 193, 205);
+}
+
+.nav-item{
+    color:rgb(243, 38, 99);
+    font-size: 18px;
+    font-weight: 500;
+    list-style: none;
+}
+
+.name-input{
+    background-color: #242e3b3f;
+    align-items: center;
+    text-align: center;
+}
+
+.message-input{
+    background-color: rgba(50, 65, 65, 0.555);
+    text-align: right;   
+}
+
+
+
+#putName{
+    width: 100%;
+    color: #03234e;
+    font-size: 20px;
+    font-weight: 500;
+    background-color: #af845cb0;
+}
+
+#userName{
+    color: rgb(0, 135, 212);
+    font-size: 15px;
+    font-weight: 500;
+}
+
+#btn-cart{
+    color: rgb(10, 83, 107);
+    border: none;
+    background: none;
+}
+
+#btn-cart:hover{
+    color: green;
+}
+
+.title{
+    text-align: center;
+}
+
+#products{
+    background-color: rgba(85, 143, 124, 0.151);
+}
+
+.card{
+    width: 15rem;
+    margin-top: 5rem;
+    border-radius: 5%;
+    border-width: 0.4rem;
+    border-color: rgb(241, 144, 99);
+}
+
+#message{
+    width: 60%;
+}
+
+#btn-message{
+    text-align: center;
+    margin-left: 1rem;
+      
+}
+
+#chat{
+    margin-bottom: 2%;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 500px;
+    background-color: rgba(143, 107, 107, 0.61);
+}
+
+#messages .remote {
+    margin-bottom: 1rem;
+}
+
+#messages{
+    flex-grow: 4;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+}
+
+#messages .message-data{
+    margin-bottom: 10px;
+}
+
+#messages .user{
+    color: rgb(19, 50, 80);
+}
+
+#messages .message-data .date-time{
+    color: rgb(133, 48, 48);
+    padding-left: 6px;
+}
+
+#messages .message-body{
+    background:#93ac8a;
+    border-radius:7px;
+    margin-bottom: 30px;
+    width: 65%;
+    position: relative;
+    color: white;
+    padding: 18px, 20px;
+    line-height: 26px;
+    font-size: 16px;
+}
+
+#messages .message-text{
+    margin-left: 1rem;
+}
+
+#messages .local .message-body {
+    background: #3f688f;
+    float: right;
+    
+}
+
+#messages .local .message-data{
+    margin-bottom: 10px;
+    float: right;
+}
+
+#messages .local .message-body:after{
+    border-bottom-color: #5a88b3;
+    left: 85%;
+    width: auto;
+}
+
+#messages .message-body:after{
+    bottom: 100%;
+    left: 25%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    border-bottom-color: #86bb71;
+    border-width: 7px;
+    margin-left: -10px;
+}
