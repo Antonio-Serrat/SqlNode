@@ -9,6 +9,7 @@ const router = Router();
 
 admin = true
 
+// Drop and create table
 router.get('/createTable', async (req, res) => {
     try {
         await productModel.createTable()
@@ -19,7 +20,7 @@ router.get('/createTable', async (req, res) => {
 })
 
 
-// get all produts
+// Get all produts
 router.get('/', async (req, res) => {
     try {
         const products =  await productModel.getAll()
@@ -33,7 +34,7 @@ router.get('/', async (req, res) => {
     }
 })
 
-// get product by id
+// Get product by id
 router.get('/:id', async (req, res)=> {
     try {
         const product = await productModel.getById(req.params.id)
@@ -47,17 +48,17 @@ router.get('/:id', async (req, res)=> {
     }
 })
 
-// add new product
+// Add new product
 router.post("/", upload.single("thumbnail"), async (req, res) =>{
     try {
         if(!admin){
             res.status(403)
             .send({error: 'Usted no posee el permiso de administrador para realizar esta llamda'})
         }else{
-            const { Name, price, description, code, stock} = req.body;
+            const { title, price} = req.body;
             const date = Date.now()
             const thumbnail = path.join("static/img/" + req.file.filename)
-            await productModel.save(Name, date, parseFloat(price), description, code, parseInt(stock), thumbnail).then(date =>{ console.log(date)});
+            await productModel.save(title, date, parseFloat(price), thumbnail).then(date =>{ console.log(date)});
             res.status(201).send({success: 'Producto creado con exito'})
         }
     } catch (error) {
@@ -69,7 +70,7 @@ router.post("/", upload.single("thumbnail"), async (req, res) =>{
   })
 
 
-// update product by id
+// Update product by id
 router.put("/:id", upload.single("thumbnail"), async (req, res) => {
     try {     
         if(!admin){
@@ -97,7 +98,7 @@ router.put("/:id", upload.single("thumbnail"), async (req, res) => {
     }
 })
 
-// delete product by id
+// Delete product by id
 router.delete('/:id', async (req, res)=> {
     try {
         if(!admin){

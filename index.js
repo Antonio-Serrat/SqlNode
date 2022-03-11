@@ -27,7 +27,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 
 app.use("/api/productos", productsRouter);
-app.use('/api/messages', messagesRouter)
+app.use('/api/mensajes', messagesRouter)
 
 app.engine('handlebars', engine({
   layoutsDir: path.join(__dirname, './views'),
@@ -51,8 +51,7 @@ io.on("connection", (socket) => {
     io.sockets.emit('refresh', null)
   })
 
-  socket.on('message', (data)=>{
-    messageModel.save(data.name, data.date, data.message, data.id)
+  socket.on('message', ()=>{
     io.sockets.emit('new-messages', null)
   })
 

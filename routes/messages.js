@@ -1,12 +1,11 @@
 const express = require('express');
-const path = require('path');
 const { Router } = express;
 
 const messageModel = require('../models/messages')
 const router = Router();
 
-admin = true
 
+// Drop and create table
 router.get('/createTable', async (req, res) => {
     try {
         await messageModel.createTable()
@@ -16,25 +15,32 @@ router.get('/createTable', async (req, res) => {
     }
 })
 
-// add new product
+// Add new message
 router.post("/", async (req, res) =>{
     try {
-        if(!admin){
-            res.status(403)
-            .send({error: 'Usted no posee el permiso de administrador para realizar esta llamda'})
-        }else{
-            const { Name, price, description, code, stock} = req.body;
-            const date = Date.now()
-            await messageModel.save(Name, date, parseFloat(price), description, code, parseInt(stock), thumbnail).then(date =>{ console.log(date)});
-            res.status(201).send({success: 'Producto creado con exito'})
-        }
+        const { name, message, user_id } = req.body;
+        const date = Date.now()
+        await messageModel.save(name, message, user_id, date);
+        res.status(201).send({success: 'mensaje guardado con exito'})
     } catch (error) {
         res.status(400).send({
-            error:'Problema al tratar de agregar un nuevo prodcuto', 
+            error:'Problema al tratar de guardar el mensaje', 
             description : error    
         })
     }
   })
 
+// Get all messages
+router.get('/', async (req, res) =>{
+    try {
+        const messages = await messageModel.getAll()
+        res.status(201).send(messages)
+    } catch (error) {
+        res.status(400).send({
+            error:'Problema al tratar de traer todos los mensajes', 
+            description : error    
+        })
+    }
+})
 
   module.exports = router;

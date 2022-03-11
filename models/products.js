@@ -1,11 +1,9 @@
 const knex = require('knex')
-const fsp = require('fs').promises;
-const fs = require('fs');
-const path = require('path');
-const dataJson = path.join(__dirname, '../public/database/products.json')
 
 class Products {
     constructor() {
+        
+        // Connection Pool
         this.db = knex({
             client:"mysql",
             connection:{
@@ -16,54 +14,39 @@ class Products {
                 database:"products_db"
             }
         })
-        this.nombreArchivo = dataJson
     }
 
+// Create table for Products
     async createTable(){
         await this.db.schema.dropTableIfExists('products')
         await this.db.schema.createTable('products', (table) => {
             table.increments('id')
             table.string('name')
             table.string('date')
-            table.string('description')
-            table.string('code')
             table.double('price')
-            table.integer('stock')
             table.string('thumbnail')
         })
         return
     }
 
-    async save(Name, date, price, description, code, stock, thumbnail) {
+
+// Save new Product
+    async save(title, date, price, thumbnail) {
         let producto = {
             date: date,
-            name: Name,
-            description: description,
-            code: code,
+            name: title,
             thumbnail: thumbnail,
-            price: price,
-            stock: stock
+            price: price
         };
-        let newProducts = [];
         try {
             await this.db("products").insert(producto)
-            if (!(fs.existsSync(this.nombreArchivo))) {
-                const data = JSON.stringify(newProducts, null, 2)
-                writeFile(data)
-            }
-            
-            const data = await fsp.readFile(this.nombreArchivo) 
-            const products = JSON.parse(data);
-            newProducts = products;
-            newProducts.push(producto);
-            const allProducts = JSON.stringify(newProducts, null, 2);
-            writeFile(allProducts)
             return producto.date
         } catch (error) {
             return error;
         }
     }
 
+// Get all Products
     async getAll() {
         try {
             const products = await this.db.select().from('products')
@@ -73,6 +56,7 @@ class Products {
         }
     }
 
+// Get Product by ID
     async getById(id) {
         try {
             const product = await this.db('products').where({ id }).first()
@@ -82,43 +66,29 @@ class Products {
         }
     }
 
+// Delet Product by ID
     async deleteById(id) {
         try {
             await this.db('products').where({ id }).del()
-            const product = products.find(product => product.id == id);
-            if (product) {
-                const index = products.indexOf(product)
-                products.splice(index, 1)
-                return true
-            }
-            else{
-                return false
-            }
         } catch (error) {
             return error
         }
     }
 
+// Delete all Products
     async deleteAll() {
         try {
-            await this.db.schema.dropTableIfExists('products')
-            writeFile('[]')
+            this.createTable()
             return
         } catch (error) {
             return error
         }
     }
 
+// Update Product by ID
     async updateById(id, newProduct) {
         try {
             await this.db('products').where({ id }).update(newProduct)
-
-            const product = products.find(product => product.id == id);
-            const index = products.indexOf(product)
-            newProduct.id = product.id 
-            products.splice(index, 1, newProduct)
-            const updatedProducts = JSON.stringify(products, null, 2);
-            writeFile(updatedProducts)
             return
         } catch (error) {
             return error
@@ -126,15 +96,5 @@ class Products {
     }
 }
 
-
-async function readFile (){
-    const data = await fsp.readFile(dataJson)
-    return JSON.parse(data);
-}
-
-async function writeFile(data){
-    await fsp.writeFile(dataJson, data, 'utf-8')
-    return
-}
 
 module.exports = new Products();

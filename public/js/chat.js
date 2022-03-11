@@ -5,13 +5,15 @@ const messageText = document.querySelector('#message')
 const btnMessage = document.querySelector('#btn-message')
 const divMessages = document.querySelector('#messages')
 
+// Object Message
+const Message = {}
 
-const message = {}
-
-socket.on('index', () => {
-    renderChat()
+// Render index on connection
+socket.on('index', async () => {
+   await renderChat()
 })
 
+// Post new Message
 btnMessage.addEventListener('click',async (e) => {
     e.preventDefault()
     if(!messageText.value){
@@ -21,32 +23,36 @@ btnMessage.addEventListener('click',async (e) => {
         return alert('El campo email no puede estar vacio')
     }
     
-    message.name = userName.value
-    message.date = Date.now(),
-    message.message = messageText.value
-    message.id = socket.id
+    Message.name = userName.value
+    Message.message = messageText.value
+    Message.user_id = socket.id
     await fetch(`${form.baseURI}api/mensajes`, {
         method: 'POST',
-        body: formData
+        body: JSON.stringify(Message),
+        headers:{
+            'Content-Type': 'application/json'
+          }
     })
 
-    socket.emit('message', message)
+    socket.emit('message', null)
     messageText.value = null
 })
 
-socket.on('new-messages', ()=>{
-        renderChat()
+// refresh Messages view after post
+socket.on('new-messages', async ()=>{
+        await renderChat()
 })
 
 
-function renderChat(){
-    fetch('/static/database/messages.json')
+// Show Messages on view
+async function renderChat(){
+    await fetch(`${form.baseURI}api/mensajes`)
     .then((res) => {
         return res.json()
     })
-    .then((msgs) => {
+    .then((messages) => {
         divMessages.innerHTML= ""
-        msgs.forEach(msg => {
+        messages.forEach(msg => {
             //create elements
             const divUser = document.createElement('div')
             const divData = document.createElement('div')
@@ -65,7 +71,7 @@ function renderChat(){
             divMessage.className = 'message-body'
             
             // assign user Local or Remote
-            if(msg.name == userName.value && msg.id === socket.id ){
+            if(msg.name == userName.value && msg.user_id === socket.id ){
                 divUser.className = 'local' 
                 spanName.innerHTML = 'Yo'
                 divData.appendChild(spanDate)

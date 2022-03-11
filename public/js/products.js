@@ -18,17 +18,16 @@ h4.innerText = 'Aun no hay productos agregados'
 div.appendChild(h4)
 
 
-
-socket.on("index", () => {
-    renderIndex()
+// render index on connection
+socket.on("index", async () => {
+    await renderIndex()
 })
 
+// Post new Product
 form.addEventListener('submit', async (e) => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
-    renderTitle(formData)
-    renderPrice(formData)
-    renderFile(formData)
+    renderFormForPost(formData)
     await fetch(`${form.baseURI}api/productos`, {
         method: 'POST',
         body: formData
@@ -36,13 +35,15 @@ form.addEventListener('submit', async (e) => {
     socket.emit('reload', null)
 })
 
-socket.on('refresh', () => {
+// refresh Prodcuts view after post<
+socket.on('refresh', async () => {
     cleanInputs()
-    renderIndex()
+    await renderIndex()
 })
 
-function renderIndex() {
-    fetch('/static/database/products.json')
+// render view of Products 
+async function renderIndex() {
+    await fetch(`${form.baseURI}api/productos`)
         .then((res) => {
             return res.json()
         })
@@ -87,19 +88,29 @@ function renderIndex() {
             }
         })
 }
-function renderTitle(formData) {
-    const titleFd = formData.get('title')
-    title.textContent = titleFd
-}
-function renderPrice(formData) {
-    const priceFd = formData.get('price')
-    price.textContent = priceFd
-}
-function renderFile(formData) {
-    const fileFd = formData.get('thumbnail')
+// render form for Post
+function renderFormForPost(formData) {
 
-    file.textContent = fileFd
+    try {
+
+        // title
+        const titleFd = formData.get('title')
+        title.textContent = titleFd
+
+        // price
+        const priceFd = formData.get('price')
+        price.textContent = priceFd
+        
+        // file
+        const fileFd = formData.get('thumbnail')
+        file.textContent = fileFd
+
+    }catch (error) {
+        return error
+    }
+    
 }
+// clean form imputs
 function cleanInputs() {
     form.reset()
 }

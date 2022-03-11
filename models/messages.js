@@ -1,11 +1,8 @@
 const knex = require('knex')
-const fsp = require('fs').promises;
-const fs = require('fs');
-const path = require('path');
-const dataJson = path.join(__dirname, "../public/database/messages.json")
-
 class Messages {
     constructor() {
+        
+        // Connection Pool
         this.db = knex({
             client:"sqlite3",
             connection:{
@@ -13,52 +10,48 @@ class Messages {
             },
             useNullAsDefault:true
         })
-
-        this.nombreArchivo = dataJson
     }
 
+// Create table for Messages
     async createTable(){
         await this.db.schema.dropTableIfExists('messages')
         await this.db.schema.createTable('messages', (table) => {
             table.increments('id')
             table.string('name')
-            table.string('date')
             table.string('message')
+            table.string('user_id')
+            table.date('date')
         })
         return
     }
 
-    async save(name, date, message, id) {
+// Save new Message
+    async save(name, message, user_id, date) {
        let msg = {
-            id:id,
-            name:name,
-            date:date,
-            message:message
+           name:name,
+           message:message,
+           user_id:user_id,
+           date:date
         }
-        let newMsgs = []
-
+        console.log(msg)
         try {
-            if (!(fs.existsSync(this.nombreArchivo))) {
-                const data = JSON.stringify(newMsgs, null, 2)
-                await writeFile(data)
-            }
-            const data = await fsp.readFile(this.nombreArchivo)
-            const messages = JSON.parse(data)
-            newMsgs = messages
-            newMsgs.push(msg)
-
-            const allMessages = JSON.stringify(newMsgs, null, 2)
-            await writeFile(allMessages)
+            await this.db('messages').insert(msg)
             return 
         }catch (error){
             return error
         }
     }
+
+// Get all Messages
+    async getAll(){
+        try {
+            const messages =  await this.db.select().from('messages')
+            return messages
+        } catch (error) {
+            return error
+        }
+    }
 }
 
-async function writeFile(data){
-    await fsp.writeFile(dataJson, data, 'utf-8')
-    return
-}
 
 module.exports = new Messages();
